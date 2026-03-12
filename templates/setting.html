@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DeutschAI - Settings Page</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33",
+                        "primary-hover": "#c9242c",
+                        "surface": "#ffffff",
+                        "background": "#f8fafc",
+                        "border-color": "#e2e8f0",
+                        "text-main": "#0f172a",
+                        "text-secondary": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "soft": "0 2px 10px rgba(0, 0, 0, 0.03)",
+                        "card": "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)"
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .error-underline {
+            text-decoration: underline wavy #ea2a33;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-text-main font-display min-h-screen flex flex-col antialiased">
+    <header class="bg-surface border-b border-border-color sticky top-0 z-40">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="size-8 text-primary">
+                    <svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd"
+                            d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                            fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-text-main text-lg font-bold tracking-tight">DeutschAI</h2>
+            </div>
+            <nav class="hidden md:flex items-center gap-1">
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/dashboard">Dashboard</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/lessons">Lektionen</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/chat">Chat</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/practice">Practice</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/vocabulary">Vocabulary</a>
+                <a class="text-primary bg-red-50 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                    href="/setting">Profile</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/logout">Logout</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <button
+                    class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-color bg-white text-text-secondary text-xs font-semibold hover:border-slate-300 transition-colors">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    {{ user.german_level }} Intermediate
+                </button>
+                <div class="bg-center bg-no-repeat bg-cover rounded-full size-9 ring-2 ring-slate-100 cursor-pointer"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8Ve1qe81BbDxBdlrWNCBUsF_ZbcYhyO3uuW8uPmnt8E-Eew2VFpKgALG5_1r_eBijKnBPUcVsmZsSOBklst3vdSgDkeL-gVZvNSTvuem6hqdl7ecV3mwm8JkXXocIPU6ge7dzCAEeOPUsRbCStWmZTUWbcVDJL_f2tAa-ZYWB8bbgZJ7kqm4KpimSvaIZx6t4tezAemk_RM_KEMjsoHIPTmQ_Rmfw4Mqu69plhgsvv5KGEmDHCpYCcVKYrsP9gg3g-uRo2MHBzG4");'>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 flex flex-col lg:flex-row w-full max-w-[1600px] mx-auto p-4 lg:p-8 gap-8">
+        <form method="POST" action="{{ url_for('setting') }}" class="w-full max-w-4xl mx-auto flex flex-col gap-6">
+            <div class="w-full max-w-4xl mx-auto flex flex-col gap-6">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div
+                    class="p-4 rounded-lg text-sm font-medium bg-{{ 'emerald-50 text-emerald-700' if category == 'success' else 'red-50 text-red-700' }} border border-{{ 'emerald-100' if category == 'success' else 'red-100' }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <div class="flex items-center gap-2 text-xs font-medium text-text-secondary">
+                    <span>Account</span>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span>Settings</span>
+                </div>
+                <div class="flex flex-wrap items-baseline justify-between gap-4">
+                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-text-main">Settings</h1>
+                </div>
+            </div>
+            <div class="bg-surface rounded-xl shadow-soft border border-border-color overflow-hidden">
+                <div class="p-6 lg:p-8 border-b border-border-color">
+                    <h3 class="text-lg font-bold text-text-main mb-1">Profile Information</h3>
+                    <p class="text-sm text-text-secondary mb-6">Update your photo and personal details.</p>
+                    <div class="flex flex-col gap-8">
+                        <div class="flex items-center gap-6">
+                            <div class="size-20 rounded-full bg-center bg-cover ring-4 ring-slate-50"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8Ve1qe81BbDxBdlrWNCBUsF_ZbcYhyO3uuW8uPmnt8E-Eew2VFpKgALG5_1r_eBijKnBPUcVsmZsSOBklst3vdSgDkeL-gVZvNSTvuem6hqdl7ecV3mwm8JkXXocIPU6ge7dzCAEeOPUsRbCStWmZTUWbcVDJL_f2tAa-ZYWB8bbgZJ7kqm4KpimSvaIZx6t4tezAemk_RM_KEMjsoHIPTmQ_Rmfw4Mqu69plhgsvv5KGEmDHCpYCcVKYrsP9gg3g-uRo2MHBzG4");'>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-3">
+                                    <button
+                                        class="px-4 py-2 text-sm font-semibold text-text-main bg-white border border-border-color rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm">
+                                        Change photo
+                                    </button>
+                                    <button
+                                        class="px-4 py-2 text-sm font-semibold text-red-600 bg-white border border-border-color rounded-lg hover:bg-red-50 hover:border-red-100 transition-colors shadow-sm">
+                                        Remove
+                                    </button>
+                                </div>
+                                <p class="text-xs text-text-secondary">Supported formats: JPG, PNG. Max size: 5MB.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-1.5">
+                                <label class="text-sm font-semibold text-text-main">First name</label>
+                                <input
+                                    class="w-full rounded-lg border-border-color bg-slate-50/50 text-sm focus:border-primary focus:ring-primary placeholder:text-slate-400"
+                                    type="text" name="first_name" value="{{ user.first_name }}" />
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-sm font-semibold text-text-main">Last name</label>
+                                <input
+                                    class="w-full rounded-lg border-border-color bg-slate-50/50 text-sm focus:border-primary focus:ring-primary placeholder:text-slate-400"
+                                    type="text" name="last_name" value="{{ user.last_name }}" />
+                            </div>
+                            <div class="space-y-1.5 md:col-span-2">
+                                <label class="text-sm font-semibold text-text-main">Email address</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                        <span class="material-symbols-outlined text-[18px]">mail</span>
+                                    </span>
+                                    <input
+                                        class="w-full rounded-lg border-border-color bg-slate-50/50 pl-10 text-sm focus:border-primary focus:ring-primary placeholder:text-slate-400"
+                                        type="email" name="email" value="{{ user.email }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 lg:p-8 border-b border-border-color">
+                    <h3 class="text-lg font-bold text-text-main mb-1">Learning Preferences</h3>
+                    <p class="text-sm text-text-secondary mb-6">Customize your CEFR level and daily practice goals.</p>
+                    <div class="space-y-6">
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-text-main">Target CEFR Level</label>
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="A1" {% if
+                                        user.german_level=='A1' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">A1</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Beginner</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="A2" {% if
+                                        user.german_level=='A2' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">A2</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Elementary</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="B1" {% if
+                                        user.german_level=='B1' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">B1</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Intermediate</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="B2" {% if
+                                        user.german_level=='B2' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">B2</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Upper Int.</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="C1" {% if
+                                        user.german_level=='C1' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">C1</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Advanced</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer group relative">
+                                    <input class="peer sr-only" name="cefr_level" type="radio" value="C2" {% if
+                                        user.german_level=='C2' %}checked{% endif %} />
+                                    <div
+                                        class="p-2 text-center rounded-lg border border-border-color bg-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary hover:border-slate-300 transition-all">
+                                        <span class="font-bold text-sm block">C2</span>
+                                        <span class="text-[10px] opacity-70 block font-medium">Mastery</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 lg:p-8 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-end gap-4">
+                    <div class="flex gap-3 w-full sm:w-auto">
+                        <button
+                            class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200 font-semibold text-sm transition-all">
+                            Cancel
+                        </button>
+                        <button
+                            class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-all shadow-lg shadow-primary/20 active:translate-y-px"
+                            type="submit">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

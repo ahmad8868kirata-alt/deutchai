@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DeutschAI - Wortschatz</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33",
+                        "primary-hover": "#c9242c",
+                        "surface": "#ffffff",
+                        "background": "#f8fafc",
+                        "border-color": "#e2e8f0",
+                        "text-main": "#0f172a",
+                        "text-secondary": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "soft": "0 2px 10px rgba(0, 0, 0, 0.03)",
+                        "card": "0 8px 30px rgba(0, 0, 0, 0.04)"
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+
+<body class="bg-background text-text-main font-display min-h-screen flex flex-col antialiased">
+    <header class="bg-surface border-b border-border-color sticky top-0 z-40">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-8 h-18 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-3">
+                    <div class="size-8 text-primary">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <span class="text-text-main text-lg font-bold tracking-tight">DeutschAI</span>
+                </a>
+            </div>
+            <nav class="hidden md:flex items-center gap-1">
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/dashboard">Dashboard</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/lessons">Lektionen</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/chat">Chat</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/practice">Übung</a>
+                <a class="text-primary bg-red-50 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                    href="/vocabulary">Wortschatz</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/setting">Profil</a>
+                <a class="text-text-secondary hover:text-text-main hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    href="/logout">Abmelden</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <div
+                    class="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-full border border-border-color bg-white text-primary text-xs font-bold shadow-sm">
+                    <span class="size-2 rounded-full bg-primary animate-pulse"></span>
+                    {{ user.german_level }}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1200px] mx-auto p-4 lg:p-8">
+        <section class="flex flex-col gap-8 w-full">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <div class="flex items-center gap-2 text-xs font-medium text-text-secondary mb-2">
+                        <span>Lernen</span>
+                        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                        <span>Wortschatz</span>
+                    </div>
+                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-text-main">Mein Wortschatz</h1>
+                    <p class="text-slate-500 text-sm mt-1">Wörter, die Sie in Ihren Übungen verbessert haben.</p>
+                </div>
+                <div class="relative w-full sm:w-80">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+                    <input id="search-input"
+                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-color bg-white text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all placeholder:text-slate-400"
+                        placeholder="Wörter suchen..." type="text" oninput="filterWords()" />
+                </div>
+            </div>
+
+            <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Word cards will be injected here -->
+                <div
+                    class="col-span-full py-20 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-3xl border border-dashed border-slate-200">
+                    <div class="animate-spin size-10 border-4 border-primary border-t-transparent rounded-full mb-4">
+                    </div>
+                    <p class="text-slate-500 font-medium">Lade Wortschatz...</p>
+                </div>
+            </div>
+
+            <div id="empty-state"
+                class="hidden col-span-full py-20 flex flex-col items-center justify-center text-center gap-6 bg-white rounded-3xl border border-dashed border-slate-200">
+                <div class="bg-slate-50 p-8 rounded-full">
+                    <span class="material-symbols-outlined text-slate-300 text-6xl">menu_book</span>
+                </div>
+                <div class="max-w-sm">
+                    <h3 class="text-xl font-bold text-text-main mb-2">Ihr Wörterbuch ist leer</h3>
+                    <p class="text-text-secondary">Wörter, bei denen Sie Fehler gemacht haben, erscheinen hier
+                        automatisch nach Ihren Schreibübungen.</p>
+                </div>
+                <a href="/practice"
+                    class="px-8 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all transform hover:-translate-y-0.5">
+                    Jetzt Üben
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let allVocabs = [];
+
+        async function fetchVocab() {
+            try {
+                const response = await fetch('/vocabulary/api/list');
+                allVocabs = await response.json();
+                renderVocab(allVocabs);
+            } catch (error) {
+                console.error("Error fetching vocab:", error);
+            }
+        }
+
+        function renderVocab(vocabs) {
+            const grid = document.getElementById('vocab-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            if (vocabs.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            grid.innerHTML = '';
+
+            vocabs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "group bg-white rounded-2xl p-6 border border-slate-100 shadow-soft hover:shadow-card hover:border-primary/20 transition-all duration-300 flex flex-col gap-4 relative";
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Korrektur</span>
+                            <h3 class="text-xl font-black text-slate-900 leading-tight">${item.correction}</h3>
+                        </div>
+                        <button onclick="speak('${item.correction}')" class="size-10 rounded-full bg-slate-50 text-slate-400 hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center group/btn">
+                            <span class="material-symbols-outlined text-[24px]">volume_up</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2 py-3 border-y border-slate-50">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-primary bg-red-50 px-2 py-0.5 rounded">FALSCH</span>
+                            <span class="text-slate-400 line-through text-sm">${item.word}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">RICHTIG</span>
+                            <span class="text-slate-900 font-bold text-sm">${item.correction}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-500 text-sm leading-relaxed">${item.explanation || 'Keine Erklärung verfügbar.'}</p>
+                    
+                    <div class="mt-auto pt-2 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-300 font-medium">${new Date(item.timestamp).toLocaleDateString()}</span>
+                        <button onclick="deleteVocab(${item.id})" class="text-xs font-bold text-slate-300 hover:text-primary transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                            Löschen
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterWords() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allVocabs.filter(v =>
+                v.word.toLowerCase().includes(query) ||
+                v.correction.toLowerCase().includes(query) ||
+                (v.explanation && v.explanation.toLowerCase().includes(query))
+            );
+            renderVocab(filtered);
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'de-DE';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        async function deleteVocab(id) {
+            if (!confirm('Dieses Wort aus Ihrem Wortschatz löschen?')) return;
+
+            try {
+                await fetch(`/vocabulary/api/delete/${id}`, { method: 'DELETE' });
+                allVocabs = allVocabs.filter(v => v.id !== id);
+                renderVocab(allVocabs);
+            } catch (error) {
+                console.error("Error deleting vocab:", error);
+            }
+        }
+
+        // Initialize
+        fetchVocab();
+    </script>
+</body>
+
+</html>

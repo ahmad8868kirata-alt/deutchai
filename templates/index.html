@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DeutschAI - Master German with AI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33",
+                        "surface": "#f8fafc",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-white font-display text-slate-900 antialiased selection:bg-primary/20 selection:text-primary">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md">
+<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center size-8 rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">translate</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900">DeutschAI</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">Features</a>
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">Methodology</a>
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">Pricing</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex text-sm font-bold text-slate-700 hover:text-primary transition-colors" onclick="window.location.href='/login'">
+                    Log In
+                </button>
+<button class="flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white hover:bg-red-600 transition-all shadow-md hover:shadow-lg shadow-primary/20" onclick="window.location.href='/signup'">
+                    Get Started
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<section class="relative overflow-hidden bg-surface py-16 sm:py-24 lg:py-32">
+<div class="absolute inset-0 -z-10 opacity-30">
+<div class="absolute right-0 top-0 -mr-24 -mt-24 h-[600px] w-[600px] rounded-full bg-primary/20 blur-[100px]"></div>
+<div class="absolute bottom-0 left-0 -mb-24 -ml-24 h-[400px] w-[400px] rounded-full bg-blue-400/20 blur-[100px]"></div>
+</div>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto">
+<div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white px-4 py-1.5 shadow-sm">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-xs font-bold text-slate-800 uppercase tracking-wide">New: GPT-4 Integration</span>
+</div>
+<div>
+<h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-slate-900 leading-[1.15]">
+                                Speak German <br class="hidden lg:block"/>Fluently with <span class="text-primary">AI</span>
+</h1>
+<p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                                Personalized lessons based on CEFR standards (A1–C2). Learn smarter with an adaptive AI tutor that corrects your pronunciation and grammar in real-time.
+                            </p>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 justify-center w-full">
+<button class="flex h-12 items-center justify-center rounded-lg bg-primary px-10 text-base font-bold text-white transition-all hover:bg-red-600 hover:-translate-y-0.5 shadow-xl shadow-primary/20" onclick="window.location.href='/signup'">
+                                Get Started
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-white">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-3xl mx-auto mb-16">
+<h2 class="text-sm font-bold uppercase tracking-widest text-primary mb-3">Why DeutschAI?</h2>
+<p class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-4">
+                        Master German with Intelligent Tools
+                    </p>
+<p class="text-lg text-slate-600">
+                        Our platform adapts to your pace, ensuring you master every aspect of the language efficiently—from complex grammar to natural pronunciation.
+                    </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="group p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Real-time Correction</h3>
+<p class="text-sm text-slate-600 leading-relaxed">Instant feedback on your writing, grammar mistakes, and style nuances as you type.</p>
+</div>
+<div class="group p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">AI Chat Partner</h3>
+<p class="text-sm text-slate-600 leading-relaxed">Practice conversations 24/7 with a responsive AI that speaks naturally and adapts to your level.</p>
+</div>
+<div class="group p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Adaptive Drills</h3>
+<p class="text-sm text-slate-600 leading-relaxed">Smart exercises that evolve based on your strengths and weaknesses to optimize memory retention.</p>
+</div>
+<div class="group p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">CEFR Progress</h3>
+<p class="text-sm text-slate-600 leading-relaxed">Visualize your detailed journey from A1 beginner to C2 fluency with analytics.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-surface border-y border-slate-100">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid gap-12 lg:grid-cols-2 lg:gap-20 items-center">
+<div class="order-2 lg:order-1 relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 h-[500px]">
+<img alt="Student studying" class="absolute inset-0 h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeCEB7-2NSN3gEgjcDvqycNs-sHXBk1GXv5-_tOj2Nk47Pvv8-k-82tEb0JBD7ELVFRtKBuTDLqNYYpcbAnZNZqlC0cNNsNP-ovrmyeGmPT-CJgb3E9-akeukE9Jkcl8f7IKzZs3t4essBEoTAUUUSOto9F2jxHt3Qo5t7YlCzIk00flAP8g41d2ZfHJIAvEVWG5E5-YwWPy4V4Wnw9dZolJWIL4UcQ0SzA5AtUhsl_JelWG4xbhvUEde4a2fcnUp6kpPSaV3lCR4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 text-white">
+<div class="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-full mb-3">STRUCTURED LEARNING</div>
+<div class="text-5xl font-bold mb-3 tracking-tight">A1 → C2</div>
+<p class="text-lg opacity-90 font-medium">Your complete journey mapped out clearly.</p>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<h2 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-6">
+                            Your Path to Fluency
+                        </h2>
+<p class="text-lg text-slate-600 mb-10 leading-relaxed">
+                            We break down the complexity of German grammar into manageable, logical steps aligned with the Common European Framework of Reference for Languages.
+                        </p>
+<div class="space-y-8">
+<div class="flex gap-6 relative">
+<div class="flex-none z-10">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white font-bold shadow-lg shadow-primary/30 text-lg">1</div>
+</div>
+<div class="absolute left-6 top-12 bottom-0 w-px bg-slate-200 -z-0 h-[calc(100%+32px)]"></div>
+<div class="pt-1">
+<h3 class="text-xl font-bold text-slate-900">Build a Daily Habit</h3>
+<p class="mt-2 text-slate-600">Consistency beats intensity. Committing to short, focused practice sessions every day is the most effective way to achieve fluency.</p>
+</div>
+</div>
+<div class="flex gap-6 relative">
+<div class="flex-none z-10">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 font-bold border-2 border-slate-200 text-lg">2</div>
+</div>
+<div class="absolute left-6 top-12 bottom-0 w-px bg-slate-200 -z-0 h-[calc(100%+32px)]"></div>
+<div class="pt-1">
+<h3 class="text-xl font-bold text-slate-900">Personalized Plan</h3>
+<p class="mt-2 text-slate-600">Get a daily routine tailored to your goals, whether it's travel, business, or exam prep.</p>
+</div>
+</div>
+<div class="flex gap-6 relative">
+<div class="flex-none z-10">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 font-bold border-2 border-slate-200 text-lg">3</div>
+</div>
+<div class="pt-1">
+<h3 class="text-xl font-bold text-slate-900">Active Practice</h3>
+<p class="mt-2 text-slate-600">Engage in speaking, writing, and listening exercises that adapt to your performance.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

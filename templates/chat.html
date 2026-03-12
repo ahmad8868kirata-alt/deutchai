@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DeutschAI - Chat Practice</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33", // Keeping branding
+                        "primary-hover": "#d6252d",
+                        "background-light": "#fcfcfc", // Slightly cleaner white
+                        "surface-light": "#ffffff",
+                        "border-light": "#e2e8f0", // Standard slate-200
+                        "subtle-text": "#64748b", // slate-500
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 font-display text-slate-900 h-screen flex flex-col selection:bg-primary/20 selection:text-primary overflow-hidden">
+
+    <header class="bg-white border-b border-border-light z-50 shrink-0">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-8 h-18 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-10">
+                <a class="text-2xl font-extrabold text-primary tracking-tight" href="/">DeutschAI</a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/dashboard">Dashboard</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/lessons">Lektionen</a>
+                    <a class="text-sm font-bold text-slate-900 px-2 py-1" href="/chat">Chat</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/practice">Übung</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/vocabulary">Wortschatz</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/setting">Profil</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors px-2 py-1"
+                        href="/logout">Abmelden</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <span
+                    class="bg-primary/5 border border-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2">
+                    <span class="size-2 rounded-full bg-primary"></span>
+                    {{ user.german_level }}
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main
+        class="flex-1 flex flex-col min-w-0 relative max-w-[1000px] mx-auto w-full bg-white shadow-card border-x border-border-light mt-4 rounded-t-2xl overflow-hidden mb-0">
+        <header
+            class="px-6 py-4 border-b border-border-light bg-white/80 backdrop-blur-md z-10 flex items-center justify-between shrink-0">
+            <div class="flex flex-col justify-center">
+                <h2 class="text-lg font-bold leading-tight flex items-center gap-2 text-slate-900">
+                    <div class="p-1.5 bg-red-50 rounded-lg">
+                        <span id="topic-icon"
+                            class="material-symbols-outlined text-primary text-xl leading-none block">forum</span>
+                    </div>
+                    <span id="display-topic">Freie Konversation</span>
+                </h2>
+                <p class="text-subtle-text text-xs font-normal ml-11">Niveau {{ user.german_level }} • Sprechübung
+                </p>
+            </div>
+            <div class="hidden sm:flex flex-col items-end w-48 gap-1.5">
+                <div class="flex justify-between w-full text-xs font-medium text-slate-500">
+                    <span>Sitzungsfortschritt</span>
+                    <span id="progress-percentage" class="text-slate-900">0%</span>
+                </div>
+                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out"
+                        style="width: 0%;"></div>
+                </div>
+            </div>
+        </header>
+        <div id="chat-container"
+            class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col gap-4 bg-slate-50/30">
+            {% if history %}
+            {% for msg in history %}
+            <div
+                class="flex {{ 'justify-end' if msg.role == 'user' else 'justify-start' }} animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div
+                    class="max-w-[80%] rounded-2xl px-4 py-3 {{ 'bg-primary text-white rounded-tr-none shadow-md shadow-primary/10' if msg.role == 'user' else 'bg-white text-slate-800 border border-slate-100 rounded-tl-none shadow-sm' }}">
+                    <p class="text-sm leading-relaxed">{{ msg.content }}</p>
+                    <span class="text-[10px] opacity-70 mt-1 block">{{ msg.timestamp.strftime('%H:%M') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            <div id="chat-bottom-spacer" class="h-[240px] shrink-0"></div>
+            {% else %}
+            <div id="welcome-message"
+                class="flex flex-col items-center justify-center min-h-[400px] text-center gap-4 py-12">
+                <div class="bg-primary/10 p-6 rounded-full animate-pulse">
+                    <span class="material-symbols-outlined text-primary text-5xl">forum</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Starte ein Gespräch mit Hans</h3>
+                <p class="text-subtle-text max-w-sm">Übe deine Deutschkenntnisse auf natürliche Weise. Hans ist
+                    bereit, mit dir über jedes Thema zu plaudern!</p>
+                <div class="flex flex-wrap justify-center gap-2 mt-2">
+                    <button
+                        class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:border-primary hover:text-primary hover:shadow-sm transition-all flex items-center gap-2"
+                        onclick="setQuickMessage('Hallo Hans, wie geht es dir?')">Hallo sagen
+                        👋</button>
+                    <button
+                        class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:border-primary hover:text-primary hover:shadow-sm transition-all flex items-center gap-2"
+                        onclick="setQuickMessage('Ich möchte über meine Hobbies sprechen.')">Über Hobbies sprechen
+                        🎨</button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-white via-white/95 to-transparent pt-12 z-10 rounded-b-2xl">
+            <div class="max-w-3xl mx-auto">
+                <div
+                    class="relative bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 flex items-center p-2 pr-2 gap-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30 transition-all">
+
+                    <input id="chat-input"
+                        class="flex-1 bg-transparent border-none text-slate-800 placeholder-slate-400 focus:ring-0 text-base py-3"
+                        placeholder="Sprechen oder schreiben Sie auf Deutsch..." type="text" />
+                    <div class="flex items-center gap-1">
+                        <button id="send-btn"
+                            class="bg-primary hover:bg-primary-hover text-white rounded-xl py-2.5 px-5 font-medium transition-colors flex items-center gap-2 shadow-lg shadow-primary/20">
+                            <span>Senden</span>
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-center text-[11px] text-slate-400 mt-3 font-medium">Klicke auf das Mikrofon zum Sprechen
+                    • KI kann Fehler machen</p>
+            </div>
+        </div>
+    </main>
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const displayTopic = document.getElementById('display-topic');
+        const topicIcon = document.getElementById('topic-icon');
+
+        let selectedTopic = "Freie Konversation";
+        let selectedIcon = "forum";
+
+        async function startChat() {
+            if (chatContainer.querySelector('#welcome-message')) {
+                displayTopic.textContent = selectedTopic;
+                topicIcon.textContent = selectedIcon;
+
+                const welcomeMsg = document.getElementById('welcome-message');
+                welcomeMsg.innerHTML = `
+                    <div class="flex justify-start items-center gap-2 text-subtle-text mb-4">
+                        <div class="bg-white border border-slate-100 rounded-2xl px-4 py-2 rounded-tl-none shadow-sm flex items-center gap-2">
+                            <div class="flex gap-1">
+                                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-500">Hans bereitet sich vor...</span>
+                        </div>
+                    </div>
+                `;
+
+                scrollToBottom();
+
+                try {
+                    const response = await fetch('/chat/api', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: "Hallo! Ich möchte mit dir auf Deutsch üben. Bitte begrüße mich freundlich und starte eine lockere Konversation.",
+                            context: selectedTopic,
+                            clear_history: true
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.choices && data.choices[0] && data.choices[0].message) {
+                        addMessage(data.choices[0].message.content, 'assistant');
+                    } else {
+                        addMessage("Entschuldigung, ich konnte die Konversation nicht starten.", 'assistant');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage("Entschuldigung, es gab einen Fehler.", 'assistant');
+                }
+            }
+        }
+
+        async function setQuickMessage(msg) {
+            if (document.getElementById('welcome-message')) {
+                await startChat();
+                chatInput.value = msg;
+                chatInput.focus();
+            } else {
+                chatInput.value = msg;
+                chatInput.focus();
+            }
+        }
+
+        function addMessage(text, role, shouldUpdateProgress = true) {
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            if (shouldUpdateProgress) {
+                updateProgress();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300 mb-4`;
+
+            const innerDiv = document.createElement('div');
+            innerDiv.className = `max-w-[80%] rounded-2xl px-4 py-3 ${role === 'user'
+                ? 'bg-primary text-white rounded-tr-none shadow-md shadow-primary/10'
+                : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none shadow-sm'
+                }`;
+
+            const textP = document.createElement('p');
+            textP.className = 'text-sm leading-relaxed';
+            textP.textContent = text;
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'text-[10px] opacity-70 mt-1 block';
+            timeSpan.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            innerDiv.appendChild(textP);
+            innerDiv.appendChild(timeSpan);
+            messageDiv.appendChild(innerDiv);
+
+            // Ensure message is added BEFORE the spacer
+            const spacer = document.getElementById('chat-bottom-spacer');
+            if (spacer) {
+                chatContainer.insertBefore(messageDiv, spacer);
+            } else {
+                chatContainer.appendChild(messageDiv);
+                // Re-create spacer if it went missing
+                const newSpacer = document.createElement('div');
+                newSpacer.id = 'chat-bottom-spacer';
+                newSpacer.className = 'h-[240px] shrink-0';
+                chatContainer.appendChild(newSpacer);
+            }
+
+            // Robust scrolling logic
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            if (chatContainer) {
+                setTimeout(() => {
+                    const spacer = document.getElementById('chat-bottom-spacer');
+                    if (spacer) {
+                        spacer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    }
+                }, 50);
+            }
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            chatInput.value = '';
+
+            // Add loading indicator
+            const loadingIndicatorId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'flex justify-start items-center gap-2 text-subtle-text mb-4';
+            loadingDiv.id = loadingIndicatorId;
+            loadingDiv.innerHTML = `
+                <div class="bg-white border border-slate-100 rounded-2xl px-4 py-2 rounded-tl-none shadow-sm flex items-center gap-2">
+                    <div class="flex gap-1">
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-500">Hans schreibt...</span>
+                </div>
+            `;
+
+            // Ensure loading indicator is added BEFORE the spacer
+            const spacer = document.getElementById('chat-bottom-spacer');
+            if (spacer) {
+                chatContainer.insertBefore(loadingDiv, spacer);
+            } else {
+                chatContainer.appendChild(loadingDiv);
+            }
+
+            scrollToBottom();
+
+            try {
+                const response = await fetch('/chat/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        context: selectedTopic || 'General'
+                    }),
+                });
+
+                const data = await response.json();
+
+                // Remove loading indicator
+                const indicator = document.getElementById(loadingIndicatorId);
+                if (indicator) indicator.remove();
+
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    addMessage(data.choices[0].message.content, 'assistant');
+                } else {
+                    addMessage("Entschuldigung, ich habe ein Problem. Versuchen Sie es später noch einmal.", 'assistant');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                const indicator = document.getElementById(loadingIndicatorId);
+                if (indicator) indicator.remove();
+                addMessage("Entschuldigung, es gab einen Fehler bei der Verbindung.", 'assistant');
+            }
+        }
+
+        // Ensure scrolling on load if history exists
+        window.addEventListener('load', () => {
+            scrollToBottom();
+        });
+
+        let progress = 0;
+        const PROGRESS_INCREMENT = 5; // Smaller increment for a longer feeling session
+        function updateProgress() {
+            progress = Math.min(100, progress + PROGRESS_INCREMENT);
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            if (progressBar) progressBar.style.width = progress + '%';
+            if (progressPercentage) progressPercentage.textContent = progress + '%';
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>
