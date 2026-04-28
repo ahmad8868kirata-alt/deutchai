@@ -17,6 +17,15 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+CEFR_DESCRIPTIONS = {
+    "A1": "Anfänger: Kann vertraute, alltägliche Ausdrücke und ganz einfache Sätze verstehen und verwenden, die auf die Befriedigung konkreter Bedürfnisse zielen. Kann sich und andere vorstellen und anderen Leuten Fragen zu ihrer Person stellen – z. B. wo sie wohnen, was für Leute sie kennen oder was für Dinge sie haben – und kann auf Fragen dieser Art Antwort geben. Kann sich auf einfache Art verständigen, wenn die Gesprächspartnerinnen oder Gesprächspartner langsam und deutlich sprechen und bereit sind zu helfen.",
+    "A2": "Grundlegende Kenntnisse: Kann Sätze und häufig gebrauchte Ausdrücke verstehen, die mit Bereichen von ganz unmittelbarer Bedeutung zusammenhängen (z. B. Informationen zur Person und zur Familie, Einkaufen, Arbeit, nähere Umgebung). Kann sich in einfachen, routinemäßigen Situationen verständigen, in denen es um einen einfachen und direkten Austausch von Informationen über vertraute und geläufige Dinge geht. Kann mit einfachen Mitteln die eigene Herkunft und Ausbildung, die direkte Umgebung und Dinge im Zusammenhang mit unmittelbaren Bedürfnissen beschreiben.",
+    "B1": "Fortgeschrittene Sprachverwendung: Kann die Hauptpunkte verstehen, wenn klare Standardsprache verwendet wird und wenn es um vertraute Dinge aus Arbeit, Schule, Freizeit usw. geht. Kann die meisten Situationen bewältigen, denen man auf Reisen im Sprachgebiet begegnet. Kann sich einfach und zusammenhängend über vertraute Themen und persönliche Interessengebiete äußern. Kann über Erfahrungen und Ereignisse berichten, Träume, Hoffnungen und Ziele beschreiben und zu Plänen und Ansichten kurze Begründungen oder Erklärungen geben.",
+    "B2": "Selbständige Sprachverwendung: Kann die Hauptinhalte komplexer Texte zu konkreten und abstrakten Themen verstehen; versteht im eigenen Spezialgebiet auch Fachdiskussionen. Kann sich so spontan und fließend verständigen, dass ein normales Gespräch mit Muttersprachlern ohne größere Anstrengung auf beiden Seiten gut möglich ist. Kann sich zu einem breiten Themenspektrum klar und detailliert ausdrücken, einen Standpunkt zu einer aktuellen Frage erläutern und die Vor- und Nachteile verschiedener Möglichkeiten angeben.",
+    "C1": "Fachkundige Sprachkenntnisse: Kann ein breites Spektrum anspruchsvoller, längerer Texte verstehen und auch implizite Bedeutungen erfassen. Kann sich spontan und fließend ausdrücken, ohne öfter deutlich erkennbar nach Worten suchen zu müssen. Kann die Sprache im gesellschaftlichen und beruflichen Leben oder in Ausbildung und Studium wirksam und flexibel gebrauchen. Kann sich klar, strukturiert und ausführlich zu komplexen Sachverhalten äußern und dabei verschiedene Mittel zur Textverknüpfung angemessen verwenden.",
+    "C2": "Annähernd muttersprachliche Kenntnisse: Kann praktisch alles, was er/sie liest oder hört, mühelos verstehen. Kann Informationen aus verschiedenen schriftlichen und mündlichen Quellen zusammenfassen und dabei Begründungen und Erklärungen in einer zusammenhängenden Darstellung wiedergeben. Kann sich spontan, sehr flüssig und genau ausdrücken und auch bei komplexeren Sachverhalten feinere Bedeutungsnuancen deutlich machen."
+}
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
@@ -120,7 +129,6 @@ def signup():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = User(first_name=first_name, last_name=last_name, german_level=german_level, email=email, password=hashed_password)
         db.session.add(new_user)
-        db.session.add(new_user)
         db.session.commit()
         flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('login'))
@@ -191,11 +199,21 @@ def explain_lesson():
     api_key = "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"
     
     prompt = f"""
-    The student is studying the lesson: "{lesson.title}".
-    Content: {lesson.content[:500]}...
-    Level: {lesson.level}.
-    Please provide a helpful, encouraging explanation of the key grammar points in this lesson in German.
-    Keep it concise but detailed enough to clarify doubts.
+    Der Schüler lernt gerade die Lektion: "{lesson.title}".
+    Inhalt: {lesson.content[:500]}...
+    Niveau: {lesson.level}.
+    
+    GER-KONTEXT FÜR NIVEAU {lesson.level}:
+    {CEFR_DESCRIPTIONS.get(lesson.level, "Allgemeiner GER-Standard")}
+
+    Bitte gib eine hilfreiche, ermutigende Erklärung der wichtigsten Grammatikpunkte dieser Lektion auf Deutsch.
+    Halte dich dabei strikt an die Standards des Gemeinsamen Europäischen Referenzrahmens (GER) für das Niveau {lesson.level}.
+    
+    WICHTIGE ANWEISUNGEN FÜR NIVEAU {lesson.level}:
+    {"- Verwende 'Leichte Sprache': nur einfache Hauptsätze, ein Gedanke pro Satz, kein Passiv, kein Genitiv." if lesson.level == 'A1' else ""}
+    {"- Verwende 'Einfache Sprache': Sätze ca. 12-15 Wörter, einfache Konjunktionen (und, aber, denn) sind erlaubt." if lesson.level == 'A2' else ""}
+    {"- Verwende klare Standardsprache: Komplexere Satzstrukturen (weil, obwohl) sind möglich." if lesson.level in ['B1', 'B2'] else ""}
+    {"- Verwende anspruchsvolle Sprache: Komplexe Satzstrukturen und Fachbegriffe sind angemessen." if lesson.level in ['C1', 'C2'] else ""}
     """
     
     response = requests.post(
@@ -230,24 +248,36 @@ def generate_lesson():
     api_key = "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"
     
     prompt = f"""
-    Generate a highly educational and comprehensive German lesson about "{topic}" for level {level}.
-    The lesson MUST be structured into two main parts:
-    1. **Erklärung (Explanation)**: Detailed grammar rules and usage.
-    2. **Beispielübungen (Solved Exercises)**: At least 3 detailed examples with the correct answer shown and a brief explanation of why.
+    Erstelle eine wissenschaftlich fundierte und umfassende Deutsch-Lektion zum Thema "{topic}" für das Niveau {level} (nach GER-Standard).
     
-    The response must be in JSON format:
+    GER-KONTEXT FÜR NIVEAU {level}:
+    {CEFR_DESCRIPTIONS.get(level, "Allgemeiner GER-Standard")}
+
+    Die Lektion MUSS in zwei Hauptteile gegliedert sein:
+    1. **Erklärung**: Detaillierte Grammatikregeln und Verwendung unter Berücksichtigung von {"Leichter Sprache" if level == 'A1' else "Einfacher Sprache" if level == 'A2' else "Standard-GER"}.
+    2. **Beispielübungen**: Mindestens 3 detaillierte Beispiele mit der richtigen Antwort und einer kurzen wissenschaftlichen Begründung (warum diese Antwort korrekt ist).
+    
+    WICHTIGE REGELN FÜR NIVEAU {level}:
+    {"- Maximal 8-10 Wörter pro Satz, keine Nebensätze, Vokabular aus der offiziellen VHS-A1-Liste." if level == 'A1' else ""}
+    {"- Sätze ca. 12-15 Wörter, Fokus auf Alltagssituationen und routinemäßige Aufgaben." if level == 'A2' else ""}
+    {"- Zusammenhängende Texte, Begründungen für Meinungen und Pläne, Nebensätze erlaubt." if level == 'B1' else ""}
+    {"- Komplexe Texte zu konkreten/abstrakten Themen, Fachdiskussionen, spontane und fließende Verständigung." if level == 'B2' else ""}
+    {"- Anspruchsvolle, längere Texte, implizite Bedeutungen, flexible Sprachverwendung im Beruf/Studium." if level == 'C1' else ""}
+    {"- Nahezu alles mühelos verstehen, Informationen zusammenfassen, feine Bedeutungsnuancen ausdrücken." if level == 'C2' else ""}
+
+    Das Format MUSS ein JSON-Objekt sein:
     {{
-        "title": "string",
-        "content_html": "HTML string. Use <div class='explanation'>...</div> for grammar and <div class='examples'>...</div> for solved exercises. Use h3 for section headers.",
+        "title": "Titel der Lektion",
+        "content_html": "HTML-String. Verwende <div class='explanation'>...</div> für Grammatik und <div class='examples'>...</div> für gelöste Übungen. Nutze h3 für Abschnitte.",
         "questions": [
             {{
-                "text": "string",
-                "a": "string", "b": "string", "c": "string", "d": "string",
+                "text": "Frage auf Niveau {level}",
+                "a": "Antwort A", "b": "Antwort B", "c": "Antwort C", "d": "Antwort D",
                 "correct": "A|B|C|D"
             }}
         ]
     }}
-    Provide 3 challenging quiz questions at the end.
+    Erstelle am Ende 3 Quizfragen, die das Niveau {level} genau prüfen.
     """
     
     response = requests.post(
@@ -313,45 +343,48 @@ def chat_api():
         return jsonify({"error": "No message provided"}), 400
 
     if clear_history:
-        # Delete old messages for this user to start fresh
         ChatMessage.query.filter_by(user_id=current_user.id).delete()
         db.session.commit()
 
-    # Save user message
     new_user_msg = ChatMessage(user_id=current_user.id, role='user', content=user_message, topic=context)
     db.session.add(new_user_msg)
     db.session.commit()
 
-    # Get recent history for context
     past_messages = ChatMessage.query.filter_by(user_id=current_user.id).order_by(ChatMessage.timestamp.desc()).limit(10).all()
     formatted_history = []
     for m in reversed(past_messages):
         formatted_history.append({"role": m.role, "content": m.content})
 
-    # Level-based persona instructions
-    level_instruction = ""
-    if current_user.german_level in ['A1', 'A2']:
-        level_instruction = "The user is a beginner. Give easy, simple, and short answers. Use basic vocabulary."
-    else:
-        level_instruction = "The user is at an advanced level. Give longer, more detailed, and natural responses. Use sophisticated vocabulary."
+    level_description = CEFR_DESCRIPTIONS.get(current_user.german_level, "")
+    level_instruction = f"Folge strikt dem GER-Standard für {current_user.german_level}: {level_description}\n"
+    
+    if current_user.german_level == 'A1':
+        level_instruction += "Zusatzregel: Folge dem Standard 'Leichte Sprache'. Nutze nur einfache Hauptsätze (S-V-O). Ein Gedanke pro Satz. Nutze nur Vokabeln der A1-Wortliste (Familie, Alltag)."
+    elif current_user.german_level == 'A2':
+        level_instruction += "Zusatzregel: Folge dem Standard 'Einfache Sprache'. Sätze ca. 12-15 Wörter. Nutze einfache Konjunktionen. Fokus auf Arbeit und unmittelbare Umgebung."
+    elif current_user.german_level == 'B1':
+        level_instruction += "Zusatzregel: Folge dem Standard GER B1. Nutze zusammenhängende Texte. Du kannst über Erfahrungen, Ziele und Meinungen sprechen und diese kurz begründen."
+    elif current_user.german_level == 'B2':
+        level_instruction += "Zusatzregel: Folge dem Standard GER B2. Kannst komplexe Texte verstehen und Fachdiskussionen führen. Drücke dich klar und detailliert aus."
+    else: # C1, C2
+        level_instruction += f"Zusatzregel: Nutze hochkomplexe Strukturen, Nuancen und Fachterminologie wie für {current_user.german_level} vorgesehen."
 
     system_content = f"""
-    You are Hans, an expert German language tutor. 
-    The user's German level is {current_user.german_level}. {level_instruction}
+    Du bist Hans, ein erfahrener Deutschlehrer.
+    Das Deutschniveau des Nutzers ist {current_user.german_level}.
     
-    CRITICAL INSTRUCTION:
-    1. Current Topic: {context}. You MUST stay strictly on this topic. If the user wanders off, politely bring them back to "{context}".
-    2. Tone: Extremely encouraging, professional, and patient.
-    3. Method: Primarily speak in German. If the user makes a small mistake, gently provide the correct form in your response.
-    4. Engagement: Always end your response with a follow-up question related to the topic to keep the conversation going.
+    WISSENSCHAFTLICHE ANWEISUNG:
+    {level_instruction}
+    
+    KRITISCHE REGELN:
+    1. Aktuelles Thema: {context}. Bleibe strikt bei diesem Thema.
+    2. Tonfall: Ermutigend, professionell und geduldig.
+    3. Methode: Antworte primär auf Deutsch. Wenn der Nutzer einen kleinen Fehler macht, korrigiere ihn sanft in deiner Antwort nach DUDEN-Standards.
+    4. Interaktion: Beende jede Antwort mit einer Anschlussfrage, die zum Niveau {current_user.german_level} passt.
     """
 
     api_key = "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"
-    
     messages = [{"role": "system", "content": system_content}]
-    # Add history (excluding the one we just saved to avoid duplication if it's already there, 
-    # but we just committed it, so it will be in past_messages)
-    # Actually, formatted_history already includes the last user message.
     messages.extend(formatted_history)
 
     response = requests.post(
@@ -370,12 +403,9 @@ def chat_api():
     if response.status_code == 200:
         res_data = response.json()
         ai_content = res_data['choices'][0]['message']['content']
-        
-        # Save AI response
         new_ai_msg = ChatMessage(user_id=current_user.id, role='assistant', content=ai_content, topic=context)
         db.session.add(new_ai_msg)
         db.session.commit()
-        
         log_activity(current_user, 'chat', f'Konversation über {context} geführt', 10)
         return jsonify(res_data)
     else:
@@ -396,30 +426,37 @@ def practice_api():
         return jsonify({"error": "No text provided"}), 400
 
     api_key = "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"
+    level_description = CEFR_DESCRIPTIONS.get(current_user.german_level, "Allgemeiner GER-Standard")
     
     system_prompt = f"""
-    You are an expert German grammar checker. The user's level is {current_user.german_level}.
-    Analyze the following German text for:
-    1. Grammar errors
-    2. Spelling mistakes
-    3. Suggested improvements for better fluency
-    4. CEFR level of the vocabulary used
-    5. An overall grammar score (0-100%)
-    6. The corrected version of the entire sentence/text
+    Du bist ein Experte für deutsche Grammatikprüfung nach DUDEN- und VHS-Prüfungsstandards.
+    Das Deutschniveau des Nutzers ist {current_user.german_level}.
+    
+    GER-KONTEXT FÜR NIVEAU {current_user.german_level}:
+    {level_description}
 
-    CRITICAL: You MUST identify and extract EACH AND EVERY misspelled word or grammar mistake as a separate entry in the 'corrections' list. Do not group multiple distinct errors into one entry unless they are part of the same phrase. Ensure that every single original word that had a mistake is listed.
+    Analysiere den folgenden deutschen Text auf:
+    1. Grammatikfehler (gemäß GER-Regeln für {current_user.german_level})
+    2. Rechtschreibfehler
+    3. Verbesserungsvorschläge für bessere Natürlichkeit und Übereinstimmung mit dem GER-Niveau {current_user.german_level}
+    4. Bestimmung des tatsächlichen GER-Niveaus des verwendeten Wortschatzes (ist er unter, auf oder über {current_user.german_level}?)
+    5. Eine Gesamtbewertung (0-100%) basierend darauf, wie gut der Text den Anforderungen von {current_user.german_level} entspricht.
+    6. Die korrigierte Version des Textes.
 
-    IMPORTANT: Your response MUST be in JSON format with the following structure:
+    WICHTIG: Identifiziere JEDEN einzelnen Fehler separat in der Liste 'corrections'. 
+    Erkläre für jeden Fehler genau die wissenschaftliche Regel (z.B. Verbposition, Kasus, Deklination) unter Bezugnahme auf den GER-Standard für {current_user.german_level}.
+    
+    Die Antwort MUSS ein JSON-Objekt sein:
     {{
         "score": number,
         "vocab_level": "string (A1-C2)",
-        "analysis_summary": "string in German",
-        "corrected_sentence": "string - the fully corrected version of the input text",
+        "analysis_summary": "Zusammenfassung auf Deutsch, die explizit auf die GER-Kriterien für {current_user.german_level} eingeht",
+        "corrected_sentence": "Vollständig korrigierte Version",
         "corrections": [
             {{
-                "original": "string",
-                "correction": "string",
-                "explanation": "string in German",
+                "original": "falsches Wort/Phrase",
+                "correction": "korrekte Form",
+                "explanation": "Wissenschaftliche Erklärung der Regel auf Deutsch, bezogen auf {current_user.german_level}",
                 "type": "grammar" | "spelling" | "style"
             }}
         ]
